@@ -9,6 +9,7 @@ import {
 	SET_DELIVERY_METHOD,
 	SET_PAYMENT_METHOD,
 	SET_DELIVERY_ADDRESS,
+	CONFIRM_ORDER,
 } from './actions'
 
 const currentPageReducer = (state = 1, action) => {
@@ -37,6 +38,8 @@ const cartReducer = (state = [], action) => {
 		case REMOVE_CART_ITEM: {
 			return state.filter(item => item.id !== action.payload.id)
 		}
+		case CONFIRM_ORDER:
+			return []
 		default: {
 			return state
 		}
@@ -70,12 +73,22 @@ const deliveryAddressReducer = (state = '', action) => {
 	}
 }
 
+const ordersReducer = (state = [], action) => {
+	switch (action.type) {
+		case CONFIRM_ORDER:
+			return [...state, action.payload]
+		default:
+			return state
+	}
+}
+
 const rootReducer = combineReducers({
 	currentPage: currentPageReducer,
 	cart: cartReducer,
 	deliveryMethod: deliveryMethodReducer,
 	paymentMethod: paymentMethodReducer,
 	deliveryAddress: deliveryAddressReducer,
+	orders: ordersReducer,
 })
 
 export default rootReducer

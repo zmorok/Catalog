@@ -8,6 +8,7 @@ import {
 	setDeliveryAddress,
 	confirmOrder,
 } from '../redux/actions'
+import ConfirmedOrders from './ConfirmedOrders'
 import './DeliveryPaymentPage.css'
 
 const DeliveryPaymentPage = ({
@@ -18,7 +19,38 @@ const DeliveryPaymentPage = ({
 	setPaymentMethod,
 	setDeliveryAddress,
 	confirmOrder,
+	cart,
+	orders,
 }) => {
+	// обработчик подтверждения заказа
+	const handleConfirmOrder = () => {
+		const order = {
+			deliveryMethod,
+			paymentMethod,
+			deliveryAddress,
+		}
+
+		if (!deliveryAddress && deliveryMethod !== 'pickup') {
+			alert('Введите адресс доставки.')
+			return
+		}
+
+		if (
+			cart.length === 0 ||
+			!cart.find(item => (item.selected ? true : false))
+		) {
+			alert('Ваша корзина пуста или товары не выбраны.')
+			return
+		}
+
+		const orderWithCart = { ...order, cart }
+		confirmOrder(orderWithCart)
+
+		setDeliveryMethod('courier')
+		setPaymentMethod('cash')
+		setDeliveryAddress('')
+	}
+
 	return (
 		<div className='order-second'>
 			<div className='delivery-method'>
@@ -85,9 +117,10 @@ const DeliveryPaymentPage = ({
 				<label>Банковским переводом</label>
 				<br />
 			</div>
-			<button className='submit-btn' onClick={confirmOrder}>
+			<button className='submit-btn' onClick={handleConfirmOrder}>
 				Подтвердить заказ
 			</button>
+			<ConfirmedOrders orders={orders} />
 		</div>
 	)
 }
@@ -96,13 +129,15 @@ const mapStateToProps = state => ({
 	deliveryMethod: state.deliveryMethod,
 	paymentMethod: state.paymentMethod,
 	deliveryAddress: state.deliveryAddress,
+	cart: state.cart,
+	orders: state.orders,
 })
 
 const mapDispatchToProps = dispatch => ({
 	setDeliveryMethod: method => dispatch(setDeliveryMethod(method)),
 	setPaymentMethod: method => dispatch(setPaymentMethod(method)),
 	setDeliveryAddress: address => dispatch(setDeliveryAddress(address)),
-	confirmOrder: () => dispatch(confirmOrder()),
+	confirmOrder: order => dispatch(confirmOrder(order)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeliveryPaymentPage)

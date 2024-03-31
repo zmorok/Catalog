@@ -8,6 +8,8 @@ export const SET_DELIVERY_METHOD = 'SET_DELIVERY_METHOD'
 export const SET_PAYMENT_METHOD = 'SET_PAYMENT_METHOD'
 export const SET_DELIVERY_ADDRESS = 'SET_DELIVERY_ADDRESS'
 export const CONFIRM_ORDER = 'CONFIRM_ORDER'
+export const SAVE_ORDER_DETAILS = 'SAVE_ORDER_DETAILS'
+export const PRICE = 'PRICE'
 
 export const nextPage = () => ({
 	type: NEXT_PAGE,
@@ -47,6 +49,7 @@ export const setDeliveryAddress = address => ({
 	payload: { address },
 })
 
-export const confirmOrder = () => ({
+export const confirmOrder = order => ({
 	type: CONFIRM_ORDER,
+	payload: order,
 })
